@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书智能诊断产品架构图 V4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f7fa;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1677FF;
+            margin-bottom: 30px;
+        }
+        
+        /* 层级样式 */
+        .layer {
+            border: 2px dashed #1677FF;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+        .layer-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1677FF;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .layer-content {
+            display: flex;
+            gap: 15px;
+            align-items: stretch;
+        }
+        
+        /* 模块样式 */
+        .module {
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            background: white;
+            flex: 1;
+        }
+        .module-title {
+            background: #1677FF;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+        }
+        .module-content {
+            padding: 10px;
+        }
+        
+        /* 子模块 - 方块样式 */
+        .sub-block {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 4px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .sub-block:last-child {
+            margin-bottom: 0;
+        }
+        .sub-block-title {
+            font-weight: 600;
+            color: #1677FF;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .sub-block-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 小标签 */
+        .tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+        
+        /* 连接箭头 */
+        .arrow-down {
+            text-align: center;
+            font-size: 24px;
+            color: #1677FF;
+            margin: 5px 0;
+        }
+        
+        /* L1 横向模块 */
+        .data-modules {
+            display: flex;
+            gap: 10px;
+        }
+        .data-module {
+            flex: 1;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            background: white;
+        }
+        .data-module-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .data-module-content {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* 问题类型网格 */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .problem-item {
+            background: #fff7e6;
+            border: 1px solid #ffd591;
+            border-radius: 4px;
+            padding: 6px 8px;
+        }
+        .problem-title {
+            font-weight: 600;
+            color: #fa8c16;
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+        .problem-desc {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        /* 场景模块 */
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .scene-item {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        .scene-title {
+            font-weight: 600;
+            color: #52c41a;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .scene-content {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* 紧凑布局 */
+        .compact-row {
+            display: flex;
+            gap: 10px;
+        }
+        .compact-item {
+            flex: 1;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 4px;
+            padding: 6px 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🔍 小红书智能诊断产品架构图</div>
+        
+        <!-- 告警触发层 -->
+        <div class="layer">
+            <div class="layer-header">🔔 告警触发层</div>
+            <div class="layer-content">
+                <div class="module">
+                    <div class="module-title">告警诊断</div>
+                    <div class="module-content">
+                        <div class="sub-block">
+                            <div class="sub-block-title">服务指标告警</div>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-block-title">业务指标告警</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">RCA 故障诊断</div>
+                    <div class="module-content">
+                        <div class="sub-block-content" style="text-align: center; padding: 10px;">根因定位与影响面分析</div>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">日常诊断</div>
+                    <div class="module-content">
+                        <div class="sub-block-content" style="text-align: center; padding: 10px;">常态化巡检与性能分析</div>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">发布诊断</div>
+                    <div class="module-content">
+                        <div class="sub-block-content" style="text-align: center; padding: 10px;">变更发布后的健康检查</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <!-- 诊断执行层（原L3） -->
+        <div class="layer">
+            <div class="layer-header">🔧 诊断执行层</div>
+            <div class="layer-content">
+                <div class="module">
+                    <div class="module-title">服务指标诊断模块</div>
+                    <div class="module-content">
+                        <div class="sub-block">
+                            <div class="sub-block-title">整体分析（定界）</div>
+                            <div class="sub-block-content">关联多指标、变更及异常特征，定性问题类型</div>
+                            <div style="margin-top: 4px;">
+                                <span class="tag">时延</span>
+                                <span class="tag">错误</span>
+                                <span class="tag">负载</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sub-block">
+                            <div class="sub-block-title">问题类型维度（各维度均有 SOP）</div>
+                            <div class="problem-grid">
+                                <div class="problem-item">
+                                    <div class="problem-title">📡 接口分析</div>
+                                    <div class="problem-desc">单POD/Zone检测 + 链路追踪 + 日志关联</div>
+                                </div>
+                                <div class="problem-item">
+                                    <div class="problem-title">⚠️ 错误分析</div>
+                                    <div class="problem-desc">异常堆栈分析 + 调用链追踪</div>
+                                </div>
+                                <div class="problem-item">
+                                    <div class="problem-title">⚡ 资源分析</div>
+                                    <div class="problem-desc">CPU/内存/网络/存储资源诊断</div>
+                                </div>
+                                <div class="problem-item">
+                                    <div class="problem-title">🗑️ JVM 分析</div>
+                                    <div class="problem-desc">GC日志分析 + 内存泄漏诊断</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module">
+                    <div class="module-title">业务指标诊断模块</div>
+                    <div class="module-content">
+                        <div class="sub-block">
+                            <div class="sub-block-title">核心场景排障路径</div>
+                            <div class="scene-grid">
+                                <div class="scene-item">
+                                    <div class="scene-title">🎯 推荐内流</div>
+                                    <div class="scene-content">分阶段占比/召回渠道/正排完整率/模型偏移</div>
+                                </div>
+                                <div class="scene-item">
+                                    <div class="scene-title">💬 消息发送</div>
+                                    <div class="scene-content">Source/类型/下游/MQ积压/错误码归因</div>
+                                </div>
+                                <div class="scene-item">
+                                    <div class="scene-title">🎬 视频播放</div>
+                                    <div class="scene-content">版本/场景/用户侧分布/APM端侧异常</div>
+                                </div>
+                                <div class="scene-item">
+                                    <div class="scene-title">📊 其他业务场景</div>
+                                    <div class="scene-content">可扩展的业务诊断场景</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sub-block">
+                            <div class="sub-block-title">业务与平台协同工场</div>
+                            <div class="compact-row">
+                                <div class="compact-item" style="background: #fff2e8; border-color: #ffbb96;">
+                                    <div style="color: #fa541c; font-weight: 600; font-size: 12px;">知识技能化</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 2px;">SOP → Skill</div>
+                                </div>
+                                <div class="compact-item" style="background: #fff2e8; border-color: #ffbb96;">
+                                    <div style="color: #fa541c; font-weight: 600; font-size: 12px;">能力工具化</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 2px;">CLI/MCP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <!-- 能力中心层（原L2） -->
+        <div class="layer">
+            <div class="layer-header">🤖 能力中心层</div>
+            <div class="layer-content">
+                <div class="module" style="flex: 1;">
+                    <div class="module-title">诊断 Agent 中控</div>
+                    <div class="module-content">
+                        <div class="sub-block">
+                            <div class="sub-block-title">提示词工程</div>
+                            <div class="sub-block-content">分级 Prompt 模板设计</div>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-block-title">上下文工程</div>
+                            <div class="sub-block-content">样本集管理与动态加载</div>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-block-title">知识库</div>
+                            <div class="sub-block-content">RPC/SQL/Redis 等领域知识</div>
+                        </div>
+                        <div class="sub-block">
+                            <div class="sub-block-title">空间</div>
+                            <div class="sub-block-content">服务画像基线空间</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="module" style="flex: 2;">
+                    <div class="module-title">Skill 生态体系</div>
+                    <div class="module-content">
+                        <div class="sub-block">
+                            <div class="sub-block-title">Skill 能力矩阵</div>
+                            <div style="font-size: 12px; margin-top: 6px;">
+                                <div style="margin-bottom: 8px;"><strong style="color: #1677FF;">基础能力 - 基础查询</strong></div>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 11px; line-height: 1.5;">
+                                    <div>🔹 <strong>系统指标查询</strong>：CPU、内存、网络、磁盘IO</div>
+                                    <div>🔹 <strong>中间件指标查询</strong>：Redis、MySQL、限流、RPC</div>
+                                    <div>🔹 <strong>日志查询</strong>：业务日志、错误日志、框架异常</div>
+                                    <div>🔹 <strong>链路查询</strong>：Trace、Span、调用拓扑</div>
+                                    <div>🔹 <strong>变更查询</strong>：发布、配置、扩缩容事件</div>
+                                    <div>🔹 <strong>K8s事件查询</strong>：Pod、Node生命周期</div>
+                                </div>
+                                <div style="margin: 8px 0;"><strong style="color: #1677FF;">特征查询</strong>：服务画像（系统/应用/异常/告警/变更特征，30min更新）</div>
+                                <div style="margin-bottom: 4px;"><strong style="color: #1677FF;">高阶能力</strong></div>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 11px; line-height: 1.5;">
+                                    <div>📊 <strong>异常诊断</strong>：异常聚类、Span关联、根因定位</div>
+                                    <div>📊 <strong>日志分析</strong>：日志聚类、模式匹配、异常总结</div>
+                                    <div>📊 <strong>链路诊断</strong>：错/慢链路分析、异常Span/Pod识别</div>
+                                    <div>📊 <strong>Java性能</strong>：Jstack、死锁检测、火焰图</div>
+                                    <div>📊 <strong>GC分析</strong>：GC Log解析、OOM风险预测</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sub-block">
+                            <div class="sub-block-title">Skill 孵化机制（生产端）</div>
+                            <div style="display: flex; gap: 10px; margin-top: 6px;">
+                                <div style="flex: 1; background: #f0f0f0; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                    <div style="font-weight: 600; color: #333;">🛠️ 低代码创建</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">原子 CLI 封装</div>
+                                    <div style="margin-top: 4px;"><span class="tag">指标</span><span class="tag">日志</span><span class="tag">链路</span><span class="tag">SQL</span></div>
+                                </div>
+                                <div style="flex: 1; background: #f0f0f0; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                    <div style="font-weight: 600; color: #333;">🌐 Skill 市场</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">双向打通</div>
+                                    <div style="margin-top: 4px;"><span class="tag">内生外化</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sub-block">
+                            <div class="sub-block-title">Skill 使用机制（消费端）</div>
+                            <div style="display: flex; gap: 10px; margin-top: 6px;">
+                                <div style="flex: 1; background: #f0f0f0; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                    <div style="font-weight: 600; color: #333;">⚡ 告警驱动自动化</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Agent 自动匹配 Skill</div>
+                                </div>
+                                <div style="flex: 1; background: #f0f0f0; padding: 6px; border-radius: 4px; font-size: 12px;">
+                                    <div style="font-weight: 600; color: #333;">📋 全流程反馈</div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">上下文/过程/结论卡片</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <!-- 智能数据层（原L1） -->
+        <div class="layer">
+            <div class="layer-header">💾 智能数据层</div>
+            <div class="data-modules">
+                <div class="data-module">
+                    <div class="data-module-title">📦 原始数据</div>
+                    <div class="data-module-content">
+                        指标 Metrics<br>
+                        链路 Traces<br>
+                        日志 Logs<br>
+                        变更/告警/K8s
+                    </div>
+                </div>
+                <div class="data-module">
+                    <div class="data-module-title">🔧 UMODEL</div>
+                    <div class="data-module-content">
+                        统一模型建模<br>
+                        数据标准化<br>
+                        关联映射
+                    </div>
+                </div>
+                <div class="data-module">
+                    <div class="data-module-title">👤 服务画像</div>
+                    <div class="data-module-content">
+                        多维度特征<br>
+                        个性化数据<br>
+                        时间维度加工
+                    </div>
+                </div>
+                <div class="data-module">
+                    <div class="data-module-title">🧠 高阶算法</div>
+                    <div class="data-module-content">
+                        异常检测<br>
+                        趋势预测<br>
+                        日志聚类
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 流程说明 -->
+        <div style="margin-top: 20px; padding: 15px; background: #f0f5ff; border-radius: 6px; border: 1px solid #d6e4ff;">
+            <div style="font-weight: 600; color: #1677FF; margin-bottom: 10px; font-size: 14px;">🔄 核心数据流</div>
+            <div style="font-size: 13px; color: #333; line-height: 1.8;">
+                <strong>诊断场景层</strong>（告警/RCA/日常/发布）→ <strong>诊断执行层</strong>（整体定界 → 问题类型SOP深挖）→ <strong>能力中心层</strong>（Agent中控 + Skill调度）→ <strong>智能数据层</strong>（数据查询）
+            </div>
+        </div>
+    </div>
+</body>
+</html>
