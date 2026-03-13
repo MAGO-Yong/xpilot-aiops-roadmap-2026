@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>研报模板 - 市场展望</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #e8eaed;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, rgba(255,107,53,0.2) 0%, rgba(255,154,0,0.1) 100%);
+            border-left: 4px solid #ff6b35;
+            padding: 30px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header-label {
+            color: #ff6b35;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        
+        .header-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .header-subtitle {
+            font-size: 14px;
+            color: #9aa0a6;
+            line-height: 1.6;
+        }
+        
+        /* 核心结论卡片 */
+        .conclusion-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .conclusion-title {
+            color: #ff6b35;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .conclusion-title::before {
+            content: "◆";
+            font-size: 10px;
+        }
+        
+        .conclusion-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #e8eaed;
+        }
+        
+        /* 内容网格 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        /* 模块卡片 */
+        .module-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .module-card:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .module-number {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff9a00 100%);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .module-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .module-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #bdc1c6;
+        }
+        
+        .module-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .module-content li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        
+        .module-content li::before {
+            content: "•";
+            color: #ff6b35;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        /* 标签样式 */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .tag {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .tag-green {
+            background: rgba(52,168,83,0.2);
+            color: #34a853;
+            border: 1px solid rgba(52,168,83,0.3);
+        }
+        
+        .tag-red {
+            background: rgba(234,67,53,0.2);
+            color: #ea4335;
+            border: 1px solid rgba(234,67,53,0.3);
+        }
+        
+        .tag-orange {
+            background: rgba(255,154,0,0.2);
+            color: #ff9a00;
+            border: 1px solid rgba(255,154,0,0.3);
+        }
+        
+        .tag-blue {
+            background: rgba(66,133,244,0.2);
+            color: #4285f4;
+            border: 1px solid rgba(66,133,244,0.3);
+        }
+        
+        /* 特殊卡片 */
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(255,107,53,0.15) 0%, rgba(255,154,0,0.1) 100%);
+            border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+        
+        .highlight-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-up {
+            color: #34a853;
+        }
+        
+        .highlight-down {
+            color: #ea4335;
+        }
+        
+        .highlight-neutral {
+            color: #ff9a00;
+        }
+        
+        .highlight-desc {
+            font-size: 13px;
+            color: #9aa0a6;
+            line-height: 1.6;
+        }
+        
+        /* 关键跟踪点 */
+        .tracking-list {
+            counter-reset: tracking;
+        }
+        
+        .tracking-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .tracking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tracking-number {
+            background: rgba(255,107,53,0.2);
+            color: #ff6b35;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .tracking-text {
+            font-size: 14px;
+            color: #e8eaed;
+            line-height: 1.6;
+        }
+        
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 12px;
+            color: #5f6368;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-title {
+                font-size: 24px;
+            }
+            
+            body {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-label">MARKET OUTLOOK / GEO-RISK</div>
+            <h1 class="header-title">伊朗冲突市场展望</h1>
+            <div class="header-subtitle">大类资产冲击 · A股映射 · 行业机会与风险</div>
+        </div>
+        
+        <!-- 核心结论 -->
+        <div class="conclusion-card">
+            <div class="conclusion-title">核心结论</div>
+            <div class="conclusion-text">
+                市场当前交易主线是"地缘冲突 → 油价抬升 → 滞胀担忧 → 风险偏好收缩"，但A股相较海外更有韧性，阶段性更受益的仍是能源链、储能、煤炭、石油石化与部分防御资产。
+            </div>
+        </div>
+        
+        <!-- 内容网格 -->
+        <div class="content-grid">
+            <!-- 01 交易主线 -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">01</div>
+                    <div class="module-title">交易主线</div>
+                </div>
+                <div class="module-content">
+                    <ul>
+                        <li>核心矛盾：市场担忧"通胀上升 + 增长放缓"的滞胀组合</li>
+                        <li>触发因素：伊朗冲突升级与霍尔木兹海峡风险</li>
+                        <li>传导路径：油价上行 → 通胀预期抬升 → 风险资产承压</li>
+                        <li>但判断并非极端滞胀，是否长期化仍需观察</li>
+                    </ul>
+                    <div class="tag-container">
+                        <span class="tag tag-orange">油价中枢上移</span>
+                        <span class="tag tag-red">风险偏好回落</span>
+                    </div>
+                    
+                    <div style="margin-top: 12px; font-size: 12px; color: #5f6368;">
+                        注：报告强调市场过去两周围绕"滞胀担忧"展开，但并不认为一定会演变成类似1970年代的深度通胀冲击。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 02 大类资产反应 -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">02</div>
+                    <div class="module-title">大类资产反应</div>
+                </div>
+                <div class="module-content">
+                    <div class="highlight-card">
+                        <div style="font-size: 13px; color: #9aa0a6; margin-bottom: 4px;">原油 / 焦煤 / 化工品</div>
+                        <div class="highlight-title highlight-up">↑ 上涨</div>
+                        <div class="highlight-desc">受地缘风险与运输扰动预期推动最强</div>
+                    </div>
+                    
+                    <div class="highlight-card">
+                        <div style="font-size: 13px; color: #9aa0a6; margin-bottom: 4px;">黄金</div>
+                        <div class="highlight-title highlight-neutral">分化</div>
+                        <div class="highlight-desc">长期逻辑未坏，但短期对冲功能弱化</div>
+                    </div>
+                    
+                    <div class="highlight-card">
+                        <div style="font-size: 13px; color: #9aa0a6; margin-bottom: 4px;">美股 / 海外风险资产</div>
+                        <div class="highlight-title highlight-down">承压</div>
+                        <div class="highlight-desc">VIX、恐慌指数、看跌期权与CTA空头上升</div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; font-size: 12px; color: #5f6368;">
+                        资产排序上，避险与能源相关资产更强，成长与高估值板块在滞胀交易下会被压估值。
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- A股映射 -->
+        <div class="module-card" style="margin-bottom: 24px;">
+            <div class="module-header">
+                <div class="module-number">03</div>
+                <div class="module-title">A股映射：谁更抗压，谁更受益</div>
+            </div>
+            <div class="module-content">
+                <div class="tag-container" style="margin-bottom: 16px;">
+                    <span class="tag tag-green">储能</span>
+                    <span class="tag tag-green">煤炭</span>
+                    <span class="tag tag-orange">石油石化</span>
+                    <span class="tag tag-blue">公共事业</span>
+                    <span class="tag tag-blue">电网设备</span>
+                </div>
+                
+                <ul>
+                    <li>相对韧性：A股整体韧性强于海外，能源链和出口制造具备缓冲</li>
+                    <li>受益方向：储能、煤炭、石油石化、公共事业电力、电网设备</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 04 + 05 -->
+        <div class="content-grid">
+            <!-- 04 当前不宜激进的方向 -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">04</div>
+                    <div class="module-title">当前不宜激进的方向</div>
+                </div>
+                <div class="module-content">
+                    <ul>
+                        <li><strong>有色：</strong>滞胀担忧未消前，不建议贸然抄底</li>
+                        <li><strong>恒生科技 / 高弹性成长：</strong>受风险偏好压制</li>
+                        <li><strong>消费：</strong>更适合等待右侧信号而非提前抢跑</li>
+                        <li><strong>纳指：</strong>补仓需谨慎，先看技术位与流动性环境</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 05 关键跟踪点 -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">05</div>
+                    <div class="module-title">关键跟踪点</div>
+                </div>
+                <div class="module-content">
+                    <div class="tracking-list">
+                        <div class="tracking-item">
+                            <div class="tracking-number">1</div>
+                            <div class="tracking-text">霍尔木兹海峡风险是否持续</div>
+                        </div>
+                        <div class="tracking-item">
+                            <div class="tracking-number">2</div>
+                            <div class="tracking-text">油价能否稳定在80—90美元区间以上</div>
+                        </div>
+                        <div class="tracking-item">
+                            <div class="tracking-number">3</div>
+                            <div class="tracking-text">海外风险资产是否继续走"滞胀交易"</div>
+                        </div>
+                        <div class="tracking-item">
+                            <div class="tracking-number">4</div>
+                            <div class="tracking-text">A股是否延续能源链强、成长弱的风格分化</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部 -->
+        <div class="footer">
+            Based on attachment summary · 单页信息图风格整理 · Generated with AI
+        </div>
+    </div>
+</body>
+</html>
